@@ -20,11 +20,11 @@ import time
 import sys
 
 if 'PySide' in sys.modules.copy():
-    from PySide.QtCore import *
-    from PySide.QtGui import *
+    from PySide.QtCore import Qt
+    from PySide.QtGui import QTreeView, QStandardItemModel, QStandardItem, QItemSelectionModel
 else:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
+    from PyQt4.QtCore import Qt
+    from PyQt4.QtGui import QTreeView, QStandardItemModel, QStandardItem, QItemSelectionModel
 
 import zprocess.locking, labscript_utils.h5_lock, h5py
 zprocess.locking.set_client_process_name('BLACS.queuemanager')
@@ -70,7 +70,7 @@ class QueueTreeview(QTreeView):
             event.accept()
             
             for url in event.mimeData().urls():
-                path = str(url.toLocalFile())
+                path = url.toLocalFile()
                 if path.endswith('.h5') or path.endswith('.hdf5'):
                     self._logger.info('Acceptable file dropped. Path is %s'%path)
                     if self.add_to_queue:
@@ -479,8 +479,8 @@ class QueueManager(object):
                             logger.error('%s has an error condition, aborting run' % name)
                             error_condition = True
                             break
-                    except Exception as e:
-                        logger.error('Exception while transitioning %s to buffered mode. Exception was: %s'%(name,str(e)))
+                    except KeyError as e:
+                        logger.error('Exception while transitioning %s to buffered mode. KeyError: %s.'%(name,str(e)))
                         error_condition = True
                         break
                         
