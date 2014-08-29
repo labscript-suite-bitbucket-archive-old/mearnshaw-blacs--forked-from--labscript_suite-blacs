@@ -30,24 +30,9 @@ except:
     print 'You should specify "--delay x" where x is an integer'
 
     
-lower_argv = [s.lower() for s in sys.argv]
-if 'pyside' in lower_argv:
-    # Import Qt
-    from PySide.QtCore import *
-    from PySide.QtGui import *
-    # from PySide.QtUiTools import QUiLoader
-elif 'pyqt' in lower_argv:
-    from PyQt4.QtCore import *
-    from PyQt4.QtGui import *
-else:
-    try:
-        from PyQt4.QtCore import *
-        from PyQt4.QtGui import *
-    except Exception:
-        from PySide.QtCore import *
-        from PySide.QtGui import *
-    
-    
+from PySide.QtCore import QTimer
+from PySide.QtGui import QWidget, QSizePolicy, QSpacerItem, QPushButton, QVBoxLayout, QMainWindow, QApplication, QFileDialog
+
 class VersionException(Exception):
     pass
     
@@ -183,7 +168,6 @@ import plugins
 class BLACSWindow(QMainWindow):
        
     def closeEvent(self, event):
-        #print 'aaaaa'
         if self.blacs.exit_complete:
             event.accept()
             if self.blacs._relaunch:
@@ -254,6 +238,7 @@ class BLACS(object):
         # Find which devices are connected to BLACS, and what their labscript class names are:
         logger.info('finding connected devices in connection table')
         self.attached_devices = self.connection_table.get_attached_devices()
+        logger.info(self.attached_devices)
         
         # Store the panes in a dictionary for easy access
         self.panes['tab_top_vertical_splitter'] = self.ui.tab_top_vertical_splitter
